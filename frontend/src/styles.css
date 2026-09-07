@@ -1,0 +1,179 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * VoxGuard design system — light audio-forensics console.
+ * Cream canvas, pale sage panels, deep forest-green accent,
+ * explicit risk/verdict tokens.
+ * All colours are semantic tokens; never hardcode colours in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@theme inline {
+  --color-verdict-real: var(--verdict-real);
+  --color-verdict-fake: var(--verdict-fake);
+  --color-risk-low: var(--risk-low);
+  --color-risk-medium: var(--risk-medium);
+  --color-risk-high: var(--risk-high);
+  --color-risk-critical: var(--risk-critical);
+  --color-surface: var(--surface);
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Cream canvas */
+  --background: oklch(0.93 0.02 120);
+  --foreground: oklch(0.3 0.045 150);
+
+  /* Pale sage panels */
+  --surface: oklch(0.96 0.015 125);
+  --card: oklch(0.96 0.015 125);
+  --card-foreground: oklch(0.3 0.045 150);
+  --popover: oklch(0.96 0.015 125);
+  --popover-foreground: oklch(0.3 0.045 150);
+
+  /* Deep forest green primary */
+  --primary: oklch(0.4 0.06 150);
+  --primary-foreground: oklch(0.95 0.02 120);
+
+  --secondary: oklch(0.89 0.025 130);
+  --secondary-foreground: oklch(0.35 0.05 150);
+
+  --muted: oklch(0.89 0.025 130);
+  --muted-foreground: oklch(0.5 0.035 145);
+
+  --accent: oklch(0.86 0.04 135);
+  --accent-foreground: oklch(0.32 0.05 150);
+
+  --destructive: oklch(0.55 0.18 25);
+  --destructive-foreground: oklch(0.97 0.01 120);
+
+  --border: oklch(0.35 0.05 150 / 14%);
+  --input: oklch(0.35 0.05 150 / 18%);
+  --ring: oklch(0.4 0.06 150);
+
+  --verdict-real: oklch(0.45 0.09 160);
+  --verdict-fake: oklch(0.55 0.18 25);
+
+  --risk-low: oklch(0.45 0.09 160);
+  --risk-medium: oklch(0.62 0.13 92);
+  --risk-high: oklch(0.58 0.16 52);
+  --risk-critical: oklch(0.52 0.19 20);
+
+  --chart-1: oklch(0.4 0.06 150);
+  --chart-2: oklch(0.45 0.09 160);
+  --chart-3: oklch(0.62 0.13 92);
+  --chart-4: oklch(0.58 0.16 52);
+  --chart-5: oklch(0.52 0.19 20);
+
+  --sidebar: oklch(0.9 0.025 128);
+  --sidebar-foreground: oklch(0.3 0.045 150);
+  --sidebar-primary: oklch(0.4 0.06 150);
+  --sidebar-primary-foreground: oklch(0.95 0.02 120);
+  --sidebar-accent: oklch(0.86 0.04 135);
+  --sidebar-accent-foreground: oklch(0.32 0.05 150);
+  --sidebar-border: oklch(0.35 0.05 150 / 12%);
+  --sidebar-ring: oklch(0.4 0.06 150);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Primary content container: subtle bordered panel, no heavy gradients. */
+@utility panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+/* Faint technical grid for large empty surfaces. */
+@utility grid-surface {
+  background-color: var(--color-surface);
+  background-image:
+    linear-gradient(to right, oklch(0.35 0.05 150 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.35 0.05 150 / 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

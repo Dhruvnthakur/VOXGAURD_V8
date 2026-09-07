@@ -1,0 +1,41 @@
+{
+  "dataset": "IndicSynth (vdivyasharma/IndicSynth)",
+  "license": "CC BY-NC 4.0",
+  "languages": [
+    "Hindi",
+    "Marathi"
+  ],
+  "generators": [
+    "freevc24"
+  ],
+  "samples": {
+    "total": 200,
+    "fake": 100,
+    "real": 100,
+    "train": 180,
+    "val": 10,
+    "test": 10
+  },
+  "per_language": {
+    "Hindi": 100
+  },
+  "per_generator": {
+    "freevc24": 100
+  },
+  "config": {
+    "base_model": "facebook/wav2vec2-base",
+    "epochs": 3,
+    "batch_size": 8,
+    "learning_rate": 2e-05,
+    "device": "cuda",
+    "amp": true
+  },
+  "test_metrics": {
+    "accuracy": 1.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "roc_auc": NaN,
+    "loss": 0.032203659415245056
+  }
+}

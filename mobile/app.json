@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "VoxGuard",
+    "slug": "voxguard",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "voxguard",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.voxguard.mobile",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "VoxGuard needs microphone access to monitor live call audio for deepfake detection."
+      }
+    },
+    "android": {
+      "permissions": ["RECORD_AUDIO", "MODIFY_AUDIO_SETTINGS"],
+      "package": "com.voxguard.mobile"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "VoxGuard needs microphone access to analyze live call audio for AI voice deepfake detection."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
