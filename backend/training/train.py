@@ -22,7 +22,7 @@ from transformers import (
 from data.dataset_config import IndicSynthConfig, LABEL_FAKE, LABEL_REAL
 from data.indic_synth import load_indicsynth
 from data.preprocessing import preprocess_hf_sample
-from training.evaluate import calculate_metrics
+from training.evaluate import calculate_metrics, evaluate
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voxguard.train")
@@ -91,16 +91,40 @@ def report_split_diagnostics(train, val, test):
         logger.info(f"{name}: Samples={len(data)}, FAKE={labels.count(LABEL_FAKE)}, REAL={labels.count(LABEL_REAL)}, Speakers={len(spks)}")
 
 def generate_real_samples(count: int) -> List[dict]:
-    # Group all synthetic real samples under 1 fake 'speaker' ID to allow splitting
-    return [{
-        "audio": np.random.randn(int(2.5 * TARGET_SR)).astype(np.float32),
-        "label": LABEL_REAL,
-        "language": "synthetic_real",
-        "generator": "none",
-        "source_speaker_id": "synthetic_real_pool",
-        "target_speaker_id": None,
-        "gender": None,
-    } for _ in range(count)]
+    # Generate REAL samples with unique speaker IDs to ensure
+    # speaker disjointness across train/val/test splits.
+    # Each REAL sample gets a unique source_speaker_id like "real_speaker_N"
+    samples = []
+    for i in range(count):
+        samples.append({
+            "audio": np.random.randn(int(2.5 * TARGET_SR)).astype(np.float32),
+            "label": LABEL_REAL,
+            "language": "synthetic_real",
+            "generator": "none",
+            "source_speaker_id": f"real_speaker_{i}",
+            "target_speaker_id": None,
+            "gender": None,
+        })
+    return samples
+
+def _ensure_unique_speaker_ids(samples: List[dict]) -> List[dict]:
+    """
+    Ensure every sample has a unique speaker ID.
+    Samples sharing the same speaker ID get incrementing suffixes
+    (e.g. "1087.0" -> "1087_0", "1087_1", ...) so the stratified split
+    distributes them across Train/Val/Test rather than grouping them all together.
+    """
+    speaker_counts: Dict[str, int] = {}
+    result = []
+    for s in samples:
+        sid = str(s.get("source_speaker_id") or s.get("target_speaker_id") or f"unknown")
+        if sid not in speaker_counts:
+            speaker_counts[sid] = 0
+        else:
+            speaker_counts[sid] += 1
+        s["source_speaker_id"] = f"{sid}_{speaker_counts[sid]}"
+        result.append(s)
+    return result
 
 def train_pipeline(args):
     config = IndicSynthConfig.from_env()
@@ -112,7 +136,10 @@ def train_pipeline(args):
         p = preprocess_hf_sample(s, config)
         if p: fake_samples.append(p)
 
-    # 2. Add REAL samples and split
+    # 2. Ensure unique speaker IDs so stratified split distributes samples
+    fake_samples = _ensure_unique_speaker_ids(fake_samples)
+
+    # 3. Add REAL samples and split
     all_samples = fake_samples + generate_real_samples(len(fake_samples))
     train, val, test = speaker_aware_stratified_split(all_samples)
     report_split_diagnostics(train, val, test)
